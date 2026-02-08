@@ -9,7 +9,6 @@ body {
 
     display: flex;
     flex-direction: column;
-    /** justify-content: center; **/ /* dude i hate positioning with heart and soul FUCK YOU */
     align-items: center;
     gap: 1rem;
 }
