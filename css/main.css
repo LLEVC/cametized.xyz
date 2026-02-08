@@ -1,10 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap');
+
 body {
+    margin: 0;
+    min-height: 100vh;
     background: #111;
+    color: #eee;
+    font-family: system-ui, sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    /** justify-content: center; **/ /* dude i hate positioning with heart and soul FUCK YOU */
+    align-items: center;
+    gap: 1rem;
 }
 
 h1 {
-    color: #fff;
-    font-family: consolas;
     text-align: center;
-    font-size: 48px;
+    margin: 20px;
+    font-family: 'Playpen Sans', sans-serif;
+    font-size: 96px;
+}
+
+p {
+    text-align: center;
+    margin: 45px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 24px;
+}
+
+button {
+    background: #fff;
+    color: #111;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
 }
