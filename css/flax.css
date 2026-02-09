@@ -14,3 +14,13 @@ p {
     font-family: "Comic Sans MS", "Comic Sans", cursive;
     text-align: center;
 }
+
+button {
+    margin: 100px auto;
+    
+    width: 275px;
+    height: 45px;
+    
+    font-size: 15.5px;
+    font-style: italic;
+}
