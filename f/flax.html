@@ -36,6 +36,10 @@
     RPG Test I made during August 2025
     </button>
 
+    <button onclick="playRandomAudio()">👀</button>
+
+    <audio id="audioPlayer"></audio>
+
     <script>
         const headers = [
             "hi flaxez page",
@@ -48,6 +52,21 @@
         const randomText = headers[Math.floor(Math.random() * headers.length)];
         document.getElementById("RandomTitle").textContent = randomText;
     </script>
+
+    <script>
+    const audioFiles = [
+        "../audios/FlaxAudio1.mp3",
+        "../audios/FlaxAudio2.mp3",
+        "../audios/FlaxAudio3.wav"
+    ];
+
+    function playRandomAudio() {
+        const audio = document.getElementById("audioPlayer");
+        const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
+        audio.src = randomAudio;
+        audio.play();
+    }
+</script>
 </body>
 
 </html>
