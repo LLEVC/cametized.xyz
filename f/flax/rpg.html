@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RPG v1</title>
+<style>
+  body { background:#222; color:#fff; text-align:center; font-family:Arial; margin-top:40px; }
+  button { margin:10px; font-size:20px; padding:10px 30px; cursor:pointer; }
+  #log { margin:20px auto; width:500px; height:200px; overflow-y:auto; background:#333; padding:10px; border-radius:10px; text-align:left; }
+</style>
+</head>
+<body>
+
+<h1>RPG</h1>
+<h2>v1</h2>
+<div id="enemySelect"></div>
+
+<div id="battle" style="display:none;">
+  <h2>Fighting <span id="enemyName"></span></h2>
+  <h3>Level: <span id="playerLevel">1</span> | Player HP: <span id="playerHP">100</span> / <span id="playerMaxHP">100</span> | MP: <span id="playerMP">100</span> / <span id="playerMaxMP">100</span></h3>
+  <h3>Enemy HP: <span id="enemyHP">100</span></h3>
+
+  <button id="normalBtn" onclick="playerMove('normal')">Normal Attack (-5 MP)</button>
+  <button id="strongBtn" onclick="playerMove('strong')">Strong Attack (-25 MP)</button>
+  <button id="healBtn" onclick="playerMove('heal')">Heal (-20 MP)</button>
+  <button id="defendBtn" onclick="playerMove('defend')">Defend (+30 MP, 25% Damage Reduction)</button>
+
+  <div id="log"></div>
+</div>
+
+<script>
+let playerLevel = 1;
+let playerMaxHP = 90, playerHP = playerMaxHP, playerMaxMP = 100, playerMP = playerMaxMP/2;
+let currentEnemy = null;
+let unlockedEnemies = [0];
+let defending = false;
+let healingmagic = false;
+let victoriesSinceLevel = 0;
+let victoriesNeededForNextLevel = 1;
+let playerAttackBonus = 0;
+let HealBonus = 0;
+
+const enemies = [
+  { name: "Test", hp: 50, attacks: [
+    {name:"Attack", min:5, max:10},
+  ], unlocks:[1], startQuote: "StartDialogue", talkQuotes: ["Dialogue1", "Dialogue2"] },
+    { name: "Test2", hp: 50, attacks: [
+    {name:"Attack", min:5, max:10},
+	{name:"Heal", min:-5, max:-10}
+  ], unlocks:[2], startQuote: "StartDialogue", talkQuotes: ["Dialogue1", "Dialogue2"] },
+];
+
+function showEnemySelect() {
+  document.getElementById('battle').style.display = 'none';
+  document.getElementById('enemySelect').innerHTML = "";
+  unlockedEnemies.forEach(id => {
+    const btn = document.createElement('button');
+    btn.textContent = enemies[id].name;
+    btn.onclick = () => startBattle(id);
+    document.getElementById('enemySelect').appendChild(btn);
+  });
+}
+
+function startBattle(enemyID) {
+  currentEnemy = {...enemies[enemyID]};
+  currentEnemy.currentHP = currentEnemy.hp;
+  playerHP = playerMaxHP;
+  playerMP = playerMaxMP/2;
+  defending = false;
+  document.getElementById('enemyName').textContent = currentEnemy.name;
+  document.getElementById('battle').style.display = 'block';
+  document.getElementById('enemySelect').innerHTML = '';
+  logMessage(`You fight ${currentEnemy.name}!`);
+  if (currentEnemy.startQuote) logMessage(`${currentEnemy.name}: "${currentEnemy.startQuote}"`);
+  updateUI();
+  enableButtons(true);
+}
+
+function logMessage(msg) {
+  const log = document.getElementById('log');
+  log.innerHTML += `<p>${msg}</p>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateUI() {
+  document.getElementById('playerLevel').textContent = playerLevel;
+  document.getElementById('playerHP').textContent = playerHP;
+  document.getElementById('playerMaxHP').textContent = playerMaxHP;
+  document.getElementById('playerMP').textContent = playerMP;
+  document.getElementById('playerMaxMP').textContent = playerMaxMP;
+  document.getElementById('enemyHP').textContent = currentEnemy.currentHP;
+}
+
+function enableButtons(enabled) {
+  document.getElementById('normalBtn').disabled = !enabled;
+  document.getElementById('strongBtn').disabled = !enabled;
+  document.getElementById('healBtn').disabled = !enabled;
+  document.getElementById('defendBtn').disabled = !enabled;
+}
+
+function levelUp() {
+  playerLevel++;
+  if (playerLevel <= 4) {
+    playerMaxHP += 20;
+  } else {
+    playerMaxHP += 5;
+  }
+  playerMaxMP += 10;
+  playerAttackBonus += 4;
+  HealBonus += 6;
+  playerHP = playerMaxHP;
+  playerMP = playerMaxMP;
+  victoriesSinceLevel = 0;
+  victoriesNeededForNextLevel++;
+  logMessage(`You leveled up to level ${playerLevel}! Max HP, MP, and Attack increased!`);
+}
+
+function playerMove(type) {
+  if (playerHP <= 0 || currentEnemy.currentHP <= 0) return;
+  let dmg = 0, heal = 0;
+
+  if (type === 'normal') {
+   if (playerMP < 5) return logMessage("Not enough MP for Normal Attack!");
+    playerMP -= 5;
+    dmg = Math.floor(Math.random() * 10) + 10 + playerAttackBonus;
+    currentEnemy.currentHP -= dmg;
+    logMessage(`You hit ${currentEnemy.name} for ${dmg} damage!`);
+    defending = false;
+  } else if (type === 'strong') {
+    if (playerMP < 25) return logMessage("Not enough MP for Strong Attack!");
+    playerMP -= 25;
+    dmg = Math.floor(Math.random() * 20) + 16 + playerAttackBonus;
+    currentEnemy.currentHP -= dmg;
+    logMessage(`You used Strong Attack for ${dmg} damage!`);
+    defending = false;
+  } else if (type === 'heal') {
+    if (playerMP < 20) return logMessage("Not enough MP to Heal!");
+    playerMP -= 20;
+	healingmagic = true;
+    heal = Math.floor(Math.random() * 17) + 15 + HealBonus;
+    playerHP = Math.min(playerHP + heal, playerMaxHP);
+    logMessage(`You healed for ${heal} HP!`);
+    defending = false;
+  } else if (type === 'defend') {
+    playerMP = Math.min(playerMP + 30, playerMaxMP);
+    defending = true;
+    logMessage(`You defend! +30 MP and 25% damage reduction next turn.`);
+  }
+
+  if (currentEnemy.currentHP <= 0) {
+    logMessage(`You defeated ${currentEnemy.name}!`);
+    playerHP = Math.min(playerHP + 20, playerMaxHP);
+    playerMP = Math.min(playerMP + 20, playerMaxMP);
+    victoriesSinceLevel++;
+    if (victoriesSinceLevel >= victoriesNeededForNextLevel) levelUp();
+    currentEnemy.unlocks.forEach(eid => {
+      if (!unlockedEnemies.includes(eid)) unlockedEnemies.push(eid);
+    });
+    setTimeout(showEnemySelect, 1500);
+    return;
+  }
+
+  updateUI();
+  enableButtons(false);
+  setTimeout(enemyTurn, 1000);
+}
+
+function enemyTurn() {
+  if (currentEnemy.currentHP <= 0 || playerHP <= 0) return;
+  const attack = currentEnemy.attacks[Math.floor(Math.random() * currentEnemy.attacks.length)];
+  let dmg = Math.floor(Math.random() * (attack.max - attack.min + 1)) + attack.min;
+
+  // Handle healing attacks
+  if (dmg <= 0) {
+    const healAmount = -dmg;
+    currentEnemy.currentHP = Math.min(currentEnemy.currentHP + healAmount, currentEnemy.hp);
+    logMessage(`${currentEnemy.name} used ${attack.name} and healed itself for ${healAmount} HP!`);
+  } else {
+    // Handle damaging attacks
+    if (defending) {
+      dmg = Math.floor(dmg * 0.75);
+      logMessage(`Your defense reduced the damage by 25%!`);
+      defending = false;
+    }
+	    if (healingmagic) {
+      dmg = Math.floor(dmg * 0.80);
+      logMessage(`Your healing magic reduced the damage by 20%!`);
+      healingmagic = false;
+    }
+    playerHP -= dmg;
+    logMessage(`${currentEnemy.name} used ${attack.name} for ${dmg} damage!`);
+  }
+
+  // Chance for enemy to talk
+  if (currentEnemy.talkQuotes && Math.random() < 0.5) {
+    const randomQuote = currentEnemy.talkQuotes[Math.floor(Math.random() * currentEnemy.talkQuotes.length)];
+    logMessage(`${currentEnemy.name} says: "${randomQuote}"`);
+  }
+
+  if (playerHP <= 0) {
+    playerHP = 0;
+    logMessage("You died!");
+	setTimeout(showEnemySelect, 2000);
+  }
+
+  updateUI();
+  setTimeout(() => enableButtons(true), 500);
+}
+
+showEnemySelect();
+</script>
+
+</body>
+</html>
