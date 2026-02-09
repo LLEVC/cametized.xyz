@@ -7,7 +7,7 @@
      <link rel="icon" type = "image/png" href = "images/EYES.png">
 </head>
 <body>
-    <h1>Flaxez's Awesome Page</h1>
+    <h1 id="RandomTitle"></h1>
 
     <p> LATEST YURI EPISODE </p.>
     
@@ -34,6 +34,19 @@
     <button onclick="window.location.href='https://cametized.xyz/f/flax/rpg'">
     RPG Test I made during August 2025
     </button>
+
+    <script>
+        const headers = [
+            "hi flaxez page",
+            "Hello everyone, this my website page for the Cametized.xyz Website. Enjoy.",
+            "FLAXEZ PAGE CONFIRMATION",
+            "Make sure to die",
+            "Flaxez Yuri is real"
+        ];
+
+        const randomText = headers[Math.floor(Math.random() * headers.length)];
+        document.getElementById("RandomTitle").textContent = randomText;
+    </script>
 </body>
 
 </html>
