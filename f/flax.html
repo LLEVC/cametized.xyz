@@ -111,15 +111,17 @@
         const snowflake = document.createElement("div");
         snowflake.className = "snowflake";
         snowflake.textContent = "*";
+
         snowflake.style.left = Math.random() * window.innerWidth + "px";
-        snowflake.style.animationDuration = 2 + Math.random() * 3 + "s";
+        snowflake.style.fontSize = 10 + Math.random() * 10 + "px";
         snowflake.style.opacity = Math.random();
+        snowflake.style.animationDuration = 3 + Math.random() * 4 + "s";
 
         document.body.appendChild(snowflake);
 
         setTimeout(() => {
             snowflake.remove();
-        }, 5000);
+        }, 7000);
     }
 
     setInterval(updateClockAndSeason, 1000);
