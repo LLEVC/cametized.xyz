@@ -4,7 +4,7 @@ const fileSystem = [
         type: "folder",
         children: [
             {
-                name: "github.com account",
+                name: "github account",
                 type: "link",
                 url: "https://github.com/cametized"
             },
@@ -29,11 +29,6 @@ const fileSystem = [
                 type: "link",
                 url: "https://steamcommunity.com/id/Cametized"
             },
-            {
-                name: "roblox account | i know, bad idea to link this in 2026 lo",
-                type: "link",
-                url: "https://www.roblox.com/users/7554529574/profile"
-            },
             
             {
                 name: "less active stuff",
@@ -48,7 +43,12 @@ const fileSystem = [
                 name: "bluesky (barely active)",
                 type: "link",
                 url: "https://bsky.app/profile/cametized.xyz"
-            }
+            },
+            {
+                name: "roblox account (roblox been shitty, only play games instead of dev)",
+                type: "link",
+                url: "https://www.roblox.com/users/7554529574/profile"
+            },
                 ]
             }
         ]
@@ -59,6 +59,11 @@ const fileSystem = [
         name: "friends",
         type: "link",
         url: "https://cametized.xyz/directories"
+    },
+    {
+        name: "the peak inc. (discord)",
+        type: "link",
+        url: "https://discord.gg/X8PT8eU3RP"
     }
 ];
 
@@ -70,7 +75,7 @@ function createItem(item) { // god i hate my life i love js
 
         const folderHeader = document.createElement("div");
         folderHeader.className = "item folder";
-        folderHeader.innerHTML = "📁 " + item.name;
+        folderHeader.innerHTML = '<img src="../images/icons/folder24.png">' + item.name;
 
         const childrenContainer = document.createElement("div");
         childrenContainer.className = "children";
@@ -95,7 +100,7 @@ function createItem(item) { // god i hate my life i love js
         link.href = item.url;
         link.target = "_blank";
         link.className = "item link";
-        link.innerHTML = "🔗 " + item.name; // please replace with an image i beg lo, same for folder --past cam
+        link.innerHTML = '<img src="../images/icons/link24agai.png">' + item.name; // i did it -- present cam
         return link;
     }
 }
@@ -116,9 +121,9 @@ function loadTheme() {
 
     if (savedTheme === "dark") {
         document.body.classList.add("dark");
-        buttonIdk.textContent = "☀ light mode";
+        buttonIdk.textContent = "☀";
     } else {
-        buttonIdk.textContent = "🌙 dark mode";
+        buttonIdk.textContent = "☽";
     }
 }
 
@@ -127,10 +132,10 @@ buttonIdk.addEventListener("click", () => {
 
     if (document.body.classList.contains("dark")) {
         localStorage.setItem("theme", "dark");
-        buttonIdk.textContent = "☀ light mode";
+        buttonIdk.textContent = "☀";
     } else {
         localStorage.setItem("theme", "light");
-        buttonIdk.textContent = "🌙 dark mode";
+        buttonIdk.textContent = "☽";
     }
 });
 
