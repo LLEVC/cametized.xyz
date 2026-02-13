@@ -109,14 +109,29 @@ function render() {
 
 render();
 
-const buttonIdk = document.getElementById("themeToggle");
+const toggleBtn = document.getElementById("themeToggle");
 
-buttonIdk.addEventListener("click", () => {
+function loadTheme() {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        toggleBtn.textContent = "☀ Light Mode";
+    } else {
+        toggleBtn.textContent = "🌙 Dark Mode";
+    }
+}
+
+toggleBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 
     if (document.body.classList.contains("dark")) {
-        buttonIdk.textContent = "☀ light mode";
-    } else { // LOOOLLL lowerecase!!!! ahheheaheahahehehehehehee :3
-        buttonIdk.textContent = "🌙 dark mode";
+        localStorage.setItem("theme", "dark");
+        toggleBtn.textContent = "☀ Light Mode";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggleBtn.textContent = "🌙 Dark Mode";
     }
 });
+
+loadTheme();
