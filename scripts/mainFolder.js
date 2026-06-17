@@ -77,6 +77,11 @@ const fileSystem = [
         url: "../dir.html"
     },
     {
+        name: "wiki",
+        type: "link",
+        url: "/wiki/main.html"
+    },
+    {
         name: "the peak inc. (discord)",
         type: "link",
         url: "https://discord.gg/X8PT8eU3RP"
