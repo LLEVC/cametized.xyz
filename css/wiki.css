@@ -4,3 +4,7 @@ body {
       font-family: system-ui;
       padding: 2rem;
 }
+
+a:visited {
+  color: rgb(255, 0, 0);
+}
